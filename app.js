@@ -67,6 +67,7 @@ function init() {
   currentPlayer = 0;
   roundScore = 0;
   scores = [0, 0];
+  gamePlaying = true;
 
 
   document.getElementById('name-0').textContent = 'Player 1';
