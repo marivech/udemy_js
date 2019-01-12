@@ -30,21 +30,27 @@
   };
   
   Question.prototype.getUserAnswer = function() {
-    return parseInt(prompt(this.text));
+    return prompt(this.text);
   };
   
   Question.prototype.check = function() {
-    if (this.getUserAnswer() === this.answer) {
+    const userAnswer = this.getUserAnswer()
+    if (parseInt(userAnswer) === this.answer) {
       console.log('Yep!');
-      return;
+      return 1;
     }
+
+    if (userAnswer === 'exit') {
+      return -1;
+    }
+
     console.log('Noooooo!');
-    return;
+    return 0;
   };
   
   Question.prototype.startQuiz = function() {
     this.show();
-    this.check();
+    return this.check();
   }
   
   var qtnPull = [
@@ -53,8 +59,17 @@
     new Question('What does the fish say?', ['bip', 'bop', 'bip-bop'], 0),
   ];
   
-  var qtnShow = Math.round(Math.random() * 2);
-  qtnPull[qtnShow].startQuiz();
+  let quizRes;
+  let score = 0;
+
+  while (quizRes !== -1) {
+    const qtnShow = Math.round(Math.random() * 2);
+    quizRes = qtnPull[qtnShow].startQuiz();
+    score += quizRes >= 0 ? quizRes : 0;
+    console.log(`Your score is ${score}`);
+  }
+
+  console.log('game stopped');
 }());
 
 
