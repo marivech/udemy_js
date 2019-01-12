@@ -47,11 +47,18 @@
     console.log('Noooooo!');
     return 0;
   };
-  
-  Question.prototype.startQuiz = function() {
+
+  Question.prototype.displayScore = function(check, callback) {
+    const res = check >= 0 ? callback(!!check) : callback(false);
+    console.log(`Your current score is ${res}`);
+  };
+
+  Question.prototype.quiz = function(callback) {
     this.show();
-    return this.check();
-  }
+    const checkRes = this.check();
+    this.displayScore(checkRes, callback);
+    return checkRes;
+  };
   
   var qtnPull = [
     new Question('What does the fox say?', ['oh man', 'af-af', 'meow'], 1),
@@ -60,13 +67,22 @@
   ];
   
   let quizRes;
-  let score = 0;
+
+  function score() {
+    let sc = 0;
+    return function(correct) {
+      if (correct) {
+        sc++;
+      }
+      return sc;
+    }
+  }
+
+  var keepScore = score();
 
   while (quizRes !== -1) {
     const qtnShow = Math.round(Math.random() * 2);
-    quizRes = qtnPull[qtnShow].startQuiz();
-    score += quizRes >= 0 ? quizRes : 0;
-    console.log(`Your score is ${score}`);
+    quizRes = qtnPull[qtnShow].quiz(keepScore);
   }
 
   console.log('game stopped');
